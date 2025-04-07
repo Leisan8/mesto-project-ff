@@ -8,15 +8,26 @@ const cardsList = document.querySelector('.places__list')
 // @todo: DOM узлы
 
 // @todo: Функция создания карточки
-function createCard(cardData, removeFunction) {
+function createCard(cardData, removeFunction, showImage) {
     const card = cardTemplate.querySelector('.places__item').cloneNode(true);
     const cardImage = card.querySelector('.card__image')
     cardImage.src = cardData.link;
     cardImage.alt = cardData.name;
     card.querySelector('.card__title').textContent = cardData.name;
     card.querySelector('.card__delete-button').addEventListener('click', () => removeFunction(card));
+    showImage(cardImage, cardData);
 
     return card;
+}
+
+function showImage(cardImage, cardData) { 
+    cardImage.addEventListener('click', () => {
+        const popupImage = document.querySelector('.popup_type_image');
+        popupImage.querySelector('.popup__image').src = cardImage.src;
+        popupImage.querySelector('.popup__image').alt = cardData.name;
+        popupImage.querySelector('.popup__caption').textContent = cardData.name;
+        openPopup(popupImage);
+    })
 }
 
 // @todo: Функция удаления карточки
@@ -27,7 +38,7 @@ function removeCard(card) {
 
 // @todo: Вывести карточки на страницу
 
-const cards = initialCards.map(cardData => createCard(cardData, removeCard));
+const cards = initialCards.map(cardData => createCard(cardData, removeCard, showImage));
 
 cards.forEach((card) => {
     cardsList.append(card);
@@ -138,7 +149,7 @@ function handleImageCreationSubmit(evt) {
         link: linkValue
     }
 
-    const newCard = createCard(newCardData, removeCard);
+    const newCard = createCard(newCardData, removeCard, showImage);
 
     cardsList.prepend(newCard);
 
