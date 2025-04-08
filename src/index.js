@@ -8,7 +8,7 @@ const cardsList = document.querySelector('.places__list')
 // @todo: DOM узлы
 
 // @todo: Функция создания карточки
-function createCard(cardData, removeFunction, showImage) {
+function createCard(cardData, removeFunction, showImage, toggleLike) {
     const card = cardTemplate.querySelector('.places__item').cloneNode(true);
     const cardImage = card.querySelector('.card__image')
     cardImage.src = cardData.link;
@@ -16,6 +16,7 @@ function createCard(cardData, removeFunction, showImage) {
     card.querySelector('.card__title').textContent = cardData.name;
     card.querySelector('.card__delete-button').addEventListener('click', () => removeFunction(card));
     showImage(cardImage, cardData);
+    card.querySelector('.card__like-button').addEventListener('click', toggleLike);
 
     return card;
 }
@@ -38,7 +39,7 @@ function removeCard(card) {
 
 // @todo: Вывести карточки на страницу
 
-const cards = initialCards.map(cardData => createCard(cardData, removeCard, showImage));
+const cards = initialCards.map(cardData => createCard(cardData, removeCard, showImage, toggleLike));
 
 cards.forEach((card) => {
     cardsList.append(card);
@@ -63,6 +64,10 @@ function handleEsc(evt) {
         if (!openedPopup) return;
         closePopup(openedPopup);
     }
+}
+
+function toggleLike(evt) {
+    evt.target.classList.toggle('card__like-button_is-active');
 }
 
 
@@ -151,7 +156,7 @@ function handleImageCreationSubmit(evt) {
         link: linkValue
     }
 
-    const newCard = createCard(newCardData, removeCard, showImage);
+    const newCard = createCard(newCardData, removeCard, showImage, toggleLike);
 
     cardsList.prepend(newCard);
 
