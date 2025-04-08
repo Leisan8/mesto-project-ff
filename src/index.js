@@ -82,6 +82,8 @@ function handleFormSubmit(evt) {
     // Вставьте новые значения с помощью textContent
     profileName.textContent = name;
     profileJob.textContent = job;
+
+    closePopup(popupEdit);
 }
 
 // Прикрепляем обработчик к форме:
