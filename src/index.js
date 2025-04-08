@@ -47,11 +47,13 @@ cards.forEach((card) => {
 
 function openPopup(popup) {
     popup.classList.add('popup_is-opened');
+    popup.classList.remove('popup_is-animated');
     document.addEventListener('keydown', handleEsc);
 }
 
 function closePopup(popup) {
     popup.classList.remove('popup_is-opened');
+    popup.classList.add('popup_is-animated');
     document.removeEventListener('keypress', handleEsc);
 }
 
