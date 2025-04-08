@@ -1,27 +1,13 @@
 import './pages/index.css'; 
 import { initialCards } from './cards.js';
 
+import { createCard, removeCard, toggleLike} from './components/cards.js';
+import { openPopup, closePopup } from './components/modals.js';
+
 // @todo: Темплейт карточки
-const cardTemplate = document.querySelector('#card-template').content;
 const cardsList = document.querySelector('.places__list')
 
-// @todo: DOM узлы
-
-// @todo: Функция создания карточки
-function createCard(cardData, removeFunction, showImage, toggleLike) {
-    const card = cardTemplate.querySelector('.places__item').cloneNode(true);
-    const cardImage = card.querySelector('.card__image')
-    cardImage.src = cardData.link;
-    cardImage.alt = cardData.name;
-    card.querySelector('.card__title').textContent = cardData.name;
-    card.querySelector('.card__delete-button').addEventListener('click', () => removeFunction(card));
-    showImage(cardImage, cardData);
-    card.querySelector('.card__like-button').addEventListener('click', toggleLike);
-
-    return card;
-}
-
-function showImage(cardImage, cardData) { 
+export function showImage(cardImage, cardData) { 
     cardImage.addEventListener('click', () => {
         const popupImage = document.querySelector('.popup_type_image');
         popupImage.querySelector('.popup__image').src = cardImage.src;
@@ -31,45 +17,11 @@ function showImage(cardImage, cardData) {
     })
 }
 
-// @todo: Функция удаления карточки
-
-function removeCard(card) {
-    card.remove();
-}
-
-// @todo: Вывести карточки на страницу
-
 const cards = initialCards.map(cardData => createCard(cardData, removeCard, showImage, toggleLike));
 
 cards.forEach((card) => {
     cardsList.append(card);
 })
-
-
-function openPopup(popup) {
-    popup.classList.add('popup_is-opened');
-    popup.classList.remove('popup_is-animated');
-    document.addEventListener('keydown', handleEsc);
-}
-
-function closePopup(popup) {
-    popup.classList.remove('popup_is-opened');
-    popup.classList.add('popup_is-animated');
-    document.removeEventListener('keypress', handleEsc);
-}
-
-function handleEsc(evt) {
-    if (evt.key === 'Escape') {
-        const openedPopup = document.querySelector('.popup_is-opened');
-        if (!openedPopup) return;
-        closePopup(openedPopup);
-    }
-}
-
-function toggleLike(evt) {
-    evt.target.classList.toggle('card__like-button_is-active');
-}
-
 
 const editButton = document.querySelector('.profile__edit-button');
 const popupEdit = document.querySelector('.popup_type_edit');
