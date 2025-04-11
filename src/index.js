@@ -7,7 +7,7 @@ import { openPopup, closePopup } from './components/modals.js';
 // @todo: Темплейт карточки
 const cardsList = document.querySelector('.places__list')
 const popupImage = document.querySelector('.popup_type_image');
-const EditProfileForm = document.forms["edit-profile"];
+const editProfileForm = document.forms["edit-profile"];
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 const cards = initialCards.map(cardData => createCard(cardData, removeCard, showImage, toggleLike));
@@ -54,8 +54,8 @@ cards.forEach((card) => {
 
 editButton.addEventListener('click', () => {
     openPopup(popupEdit);
-    EditProfileForm.elements.name.value = profileTitle.textContent;
-    EditProfileForm.elements.description.value = profileDescription.textContent;
+    editProfileForm.elements.name.value = profileTitle.textContent;
+    editProfileForm.elements.description.value = profileDescription.textContent;
 });
 
 
@@ -63,8 +63,8 @@ addButton.addEventListener('click', () => openPopup(popupAdd));
 
 
 closeButtons.forEach((closeButton) => {
-    closeButton.addEventListener('click', () => {
-        const openedPopup = document.querySelector('.popup_is-opened');
+    closeButton.addEventListener('click', (evt) => {
+        const openedPopup = evt.target.closest('.popup');
         closePopup(openedPopup);
     });
 })
