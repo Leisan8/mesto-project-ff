@@ -59,3 +59,17 @@ export function deleteCardOnServer(cardId) {
       })
       .catch(err => console.log(err));
 }
+
+export function updateProfileAvatarOnServer(avatarLink) {
+    fetch('https://nomoreparties.co/v1/wff-cohort-37/users/me/avatar ', {
+        method: 'PATCH',
+        headers: {
+          authorization: AUTH_HEADER.authorization,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          avatar: avatarLink,
+        })
+      })
+      .catch(err => console.log(err));
+}

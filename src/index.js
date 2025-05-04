@@ -5,7 +5,7 @@ import { openPopup, closePopup } from './components/modals.js';
 
 import { clearValidation, enableValidation} from './components/validation.js';
 
-import { fetchUserData, fetchCards, addNewCardOnServer, updateProfileDetialsOnServer} from './components/api.js';
+import { fetchUserData, fetchCards, addNewCardOnServer, updateProfileDetialsOnServer, updateProfileAvatarOnServer} from './components/api.js';
 
 // @todo: Темплейт карточки
 const cardsList = document.querySelector('.places__list')
@@ -15,6 +15,9 @@ const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 const profileImage = document.querySelector('.profile__image');
 
+const profileAvatar = document.querySelector('.profile__avatar');
+const popupAvatar = document.querySelector('.popup_type_avatar');
+
 const editButton = document.querySelector('.profile__edit-button');
 const popupEdit = document.querySelector('.popup_type_edit');
 
@@ -23,6 +26,8 @@ const popupAdd = document.querySelector('.popup_type_new-card');
 
 const closeButtons = document.querySelectorAll('.popup__close');
 const popups = document.querySelectorAll('.popup');
+
+const submitAvatarButton = document.querySelector('#submit-avatar');
 
 // Находим форму в DOM
 const formEditProfile = popupEdit.querySelector('.popup__form'); // Воспользуйтесь методом querySelector()
@@ -169,3 +174,21 @@ Promise.all([fetchUserData(), fetchCards()])
   });
 
 
+  profileAvatar.addEventListener('click', (evt) => {
+    openPopup(popupAvatar);
+  })
+
+  submitAvatarButton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+
+    const NewAvatarLink = popupAvatar.querySelector('.popup__input_type_url').value
+    
+    profileImage.style.backgroundImage = `url('${NewAvatarLink}')`;
+    updateProfileAvatarOnServer(NewAvatarLink);
+
+    const openedPopup = evt.target.closest('.popup');
+    const openedForm = openedPopup.querySelector('.popup__form');
+
+    closePopup(popupAvatar);
+    clearValidation(openedForm, enableValidationConfig);
+  })
