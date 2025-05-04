@@ -107,20 +107,6 @@ function handleEditProfileFormSubmit(evt) {
     closePopup(popupEdit);
 }
 
-function updateProfileDetialsOnServer(name, job) {
-    fetch('https://nomoreparties.co/v1/wff-cohort-37/users/me', {
-        method: 'PATCH',
-        headers: {
-          authorization: AUTH_HEADER.authorization,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: name,
-          about: job
-        })
-      })
-      .catch(err => console.log(err));
-}
 
 
 // Прикрепляем обработчик к форме:
@@ -140,6 +126,7 @@ function handleImageCreationSubmit(evt) {
     }
 
     const newCard = createCard(newCardData, removeCard, showImage, toggleLike);
+    addNewCardOnServer(placeNameValue, linkValue);
 
     cardsList.prepend(newCard);
 
@@ -196,3 +183,37 @@ Promise.all([fetchUserData(), fetchCards()])
   .catch((err) => {
     console.error('Error loading data:', err);
   });
+
+
+
+function updateProfileDetialsOnServer(name, job) {
+    fetch('https://nomoreparties.co/v1/wff-cohort-37/users/me', {
+        method: 'PATCH',
+        headers: {
+          authorization: AUTH_HEADER.authorization,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: name,
+          about: job
+        })
+      })
+      .catch(err => console.log(err));
+}
+
+
+function addNewCardOnServer(name, link) {
+    fetch('https://nomoreparties.co/v1/wff-cohort-37/cards', {
+        method: 'POST',
+        headers: {
+          authorization: AUTH_HEADER.authorization,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: name,
+          link: link
+        })
+      })
+      .catch(err => console.log(err));
+}
+
