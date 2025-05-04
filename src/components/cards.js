@@ -1,10 +1,15 @@
 const cardTemplate = document.querySelector('#card-template').content;
 
-export function createCard(cardData, removeFunction, showImage, toggleLike) {
+export function createCard(cardData, removeFunction, showImage, toggleLike, likesCount=0) {
     const card = cardTemplate.querySelector('.places__item').cloneNode(true);
     const cardImage = card.querySelector('.card__image')
+    const cardLikeCounter = card.querySelector('.card__like-counter');
+
     cardImage.src = cardData.link;
     cardImage.alt = cardData.name;
+
+    cardLikeCounter.textContent = likesCount;
+
     card.querySelector('.card__title').textContent = cardData.name;
     card.querySelector('.card__delete-button').addEventListener('click', () => removeFunction(card));
     showImage(cardImage, cardData);
