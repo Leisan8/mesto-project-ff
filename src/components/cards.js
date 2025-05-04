@@ -1,3 +1,5 @@
+import { deleteCardOnServer } from './api.js';
+
 const cardTemplate = document.querySelector('#card-template').content;
 
 export function createCard(cardData, removeFunction, showImage, toggleLike, likesCount=0) {
@@ -11,7 +13,13 @@ export function createCard(cardData, removeFunction, showImage, toggleLike, like
     cardLikeCounter.textContent = likesCount;
 
     card.querySelector('.card__title').textContent = cardData.name;
-    card.querySelector('.card__delete-button').addEventListener('click', () => removeFunction(card));
+
+    if (removeFunction === null) {
+        card.querySelector('.card__delete-button').remove();
+    }
+    else {
+        card.querySelector('.card__delete-button').addEventListener('click', () => removeFunction(card, cardData._id));
+    }
     showImage(cardImage, cardData);
     card.querySelector('.card__like-button').addEventListener('click', toggleLike);
 
@@ -20,7 +28,8 @@ export function createCard(cardData, removeFunction, showImage, toggleLike, like
 
 // @todo: Функция удаления карточки
 
-export function removeCard(card) {
+export function removeCard(card, cardId) {
+    deleteCardOnServer(cardId);
     card.remove();
 }
 

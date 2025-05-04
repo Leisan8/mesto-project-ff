@@ -5,6 +5,8 @@ import { openPopup, closePopup } from './components/modals.js';
 
 import { clearValidation, enableValidation} from './components/validation.js';
 
+import { fetchUserData, fetchCards, addNewCardOnServer, updateProfileDetialsOnServer} from './components/api.js';
+
 // @todo: Темплейт карточки
 const cardsList = document.querySelector('.places__list')
 const popupImage = document.querySelector('.popup_type_image');
@@ -38,10 +40,6 @@ const inputLinkFormAddNewCard = addImageFormElement.querySelector('.popup__input
 const profileName = document.querySelector('.profile__title');
 const profileJob = document.querySelector('.profile__description');
 
-const API_URL = 'https://nomoreparties.co/v1/wff-cohort-37';
-const AUTH_HEADER = {
-  authorization: 'bb1d456e-eba6-4c51-b0d8-becd4ada6370'
-};
 
 
 export function showImage(cardImage, cardData) { 
@@ -155,20 +153,6 @@ enableValidation(enableValidationConfig);
 
 
 
-function fetchUserData() {
-    return fetch(`${API_URL}/users/me`, {
-      headers: AUTH_HEADER
-    }).then(res => res.json());
-  }
-  
-function fetchCards() {
-    return fetch(`${API_URL}/cards`, {
-      headers: AUTH_HEADER
-    }).then(res => res.json());
-  }
-
-
-
 Promise.all([fetchUserData(), fetchCards()])
   .then(([userData, cards]) => {
     const userId = userData._id;
@@ -177,43 +161,11 @@ Promise.all([fetchUserData(), fetchCards()])
     profileDescription.textContent = userData.about;
     profileImage.style.backgroundImage = `url('${userData.avatar}')`;
 
-    cards.forEach(card => cardsList.append(createCard(card, removeCard, showImage, toggleLike, card.likes.length)));
+    cards.forEach(card => cardsList.append(createCard(card, card.owner._id === userId ? removeCard : null, showImage, toggleLike, card.likes.length)));
 
   })
   .catch((err) => {
     console.error('Error loading data:', err);
   });
 
-
-
-function updateProfileDetialsOnServer(name, job) {
-    fetch('https://nomoreparties.co/v1/wff-cohort-37/users/me', {
-        method: 'PATCH',
-        headers: {
-          authorization: AUTH_HEADER.authorization,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: name,
-          about: job
-        })
-      })
-      .catch(err => console.log(err));
-}
-
-
-function addNewCardOnServer(name, link) {
-    fetch('https://nomoreparties.co/v1/wff-cohort-37/cards', {
-        method: 'POST',
-        headers: {
-          authorization: AUTH_HEADER.authorization,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: name,
-          link: link
-        })
-      })
-      .catch(err => console.log(err));
-}
 
