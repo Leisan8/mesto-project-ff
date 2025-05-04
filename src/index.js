@@ -1,5 +1,4 @@
 import './pages/index.css'; 
-import { initialCards } from './components/initial_cards.js';
 
 import { createCard, removeCard, toggleLike} from './components/cards.js';
 import { openPopup, closePopup } from './components/modals.js';
@@ -39,6 +38,11 @@ const inputLinkFormAddNewCard = addImageFormElement.querySelector('.popup__input
 const profileName = document.querySelector('.profile__title');
 const profileJob = document.querySelector('.profile__description');
 
+const API_URL = 'https://nomoreparties.co/v1/wff-cohort-37';
+const AUTH_HEADER = {
+  authorization: 'bb1d456e-eba6-4c51-b0d8-becd4ada6370'
+};
+
 
 export function showImage(cardImage, cardData) { 
     cardImage.addEventListener('click', () => {
@@ -48,10 +52,6 @@ export function showImage(cardImage, cardData) {
         openPopup(popupImage);
     })
 }
-
-// cards.forEach((card) => {
-//     cardsList.append(card);
-// })
 
 
 editButton.addEventListener('click', () => {
@@ -102,8 +102,26 @@ function handleEditProfileFormSubmit(evt) {
     profileName.textContent = name;
     profileJob.textContent = job;
 
+    updateProfileDetialsOnServer(name, job);
+
     closePopup(popupEdit);
 }
+
+function updateProfileDetialsOnServer(name, job) {
+    fetch('https://nomoreparties.co/v1/wff-cohort-37/users/me', {
+        method: 'PATCH',
+        headers: {
+          authorization: AUTH_HEADER.authorization,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: name,
+          about: job
+        })
+      })
+      .catch(err => console.log(err));
+}
+
 
 // Прикрепляем обработчик к форме:
 // он будет следить за событием “submit” - «отправка»
@@ -149,10 +167,6 @@ const enableValidationConfig = {
 enableValidation(enableValidationConfig);
 
 
-const API_URL = 'https://nomoreparties.co/v1/wff-cohort-37';
-const AUTH_HEADER = {
-  authorization: 'bb1d456e-eba6-4c51-b0d8-becd4ada6370'
-};
 
 function fetchUserData() {
     return fetch(`${API_URL}/users/me`, {
