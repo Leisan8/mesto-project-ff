@@ -20,3 +20,29 @@
     margin-right: 0;
   }
 }
+
+
+.profile__avatar {
+  position: relative;
+}
+
+.profile__hover-icon {
+  position: absolute;
+  inset: 0;
+  background-image: url('../../../images/edit-icon.svg'); /* your vector icon */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 26px 26px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.profile__avatar:hover .profile__image {
+  filter: brightness(30%);
+}
+
+.profile__avatar:hover .profile__hover-icon {
+  opacity: 1;
+}
+
