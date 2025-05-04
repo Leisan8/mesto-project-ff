@@ -12,6 +12,8 @@ const popupImage = document.querySelector('.popup_type_image');
 const editProfileForm = document.forms["edit-profile"];
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
+const profileImage = document.getElementById('.profile__image');
+
 const cards = initialCards.map(cardData => createCard(cardData, removeCard, showImage, toggleLike));
 
 const editButton = document.querySelector('.profile__edit-button');
@@ -148,3 +150,24 @@ const enableValidationConfig = {
 
 enableValidation(enableValidationConfig);
 
+
+
+
+function fetchUserData() {
+    fetch('https://nomoreparties.co/v1/wff-cohort-37/users/me', {
+    headers: {
+        authorization: 'bb1d456e-eba6-4c51-b0d8-becd4ada6370'
+    }
+    })
+    .then(res => res.json())
+    .then((result) => {
+        profileTitle.textContent = result.name;
+        profileDescription.textContent = result.about;
+        profileImage.style.backgroundImage = `url('${result.avatar}')`;
+    })
+    .catch((err) => {
+        console.log(err); 
+    });
+}
+
+fetchUserData();
