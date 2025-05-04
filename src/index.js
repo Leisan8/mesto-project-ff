@@ -12,9 +12,7 @@ const popupImage = document.querySelector('.popup_type_image');
 const editProfileForm = document.forms["edit-profile"];
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
-const profileImage = document.getElementById('.profile__image');
-
-const cards = initialCards.map(cardData => createCard(cardData, removeCard, showImage, toggleLike));
+const profileImage = document.querySelector('.profile__image');
 
 const editButton = document.querySelector('.profile__edit-button');
 const popupEdit = document.querySelector('.popup_type_edit');
@@ -51,9 +49,9 @@ export function showImage(cardImage, cardData) {
     })
 }
 
-cards.forEach((card) => {
-    cardsList.append(card);
-})
+// cards.forEach((card) => {
+//     cardsList.append(card);
+// })
 
 
 editButton.addEventListener('click', () => {
@@ -151,23 +149,36 @@ const enableValidationConfig = {
 enableValidation(enableValidationConfig);
 
 
-
+const API_URL = 'https://nomoreparties.co/v1/wff-cohort-37';
+const AUTH_HEADER = {
+  authorization: 'bb1d456e-eba6-4c51-b0d8-becd4ada6370'
+};
 
 function fetchUserData() {
-    fetch('https://nomoreparties.co/v1/wff-cohort-37/users/me', {
-    headers: {
-        authorization: 'bb1d456e-eba6-4c51-b0d8-becd4ada6370'
-    }
-    })
-    .then(res => res.json())
-    .then((result) => {
-        profileTitle.textContent = result.name;
-        profileDescription.textContent = result.about;
-        profileImage.style.backgroundImage = `url('${result.avatar}')`;
-    })
-    .catch((err) => {
-        console.log(err); 
-    });
-}
+    return fetch(`${API_URL}/users/me`, {
+      headers: AUTH_HEADER
+    }).then(res => res.json());
+  }
+  
+function fetchCards() {
+    return fetch(`${API_URL}/cards`, {
+      headers: AUTH_HEADER
+    }).then(res => res.json());
+  }
 
-fetchUserData();
+
+
+Promise.all([fetchUserData(), fetchCards()])
+  .then(([userData, cards]) => {
+    const userId = userData._id;
+
+    profileTitle.textContent = userData.name;
+    profileDescription.textContent = userData.about;
+    profileImage.style.backgroundImage = `url('${userData.avatar}')`;
+
+    cards.forEach(card => cardsList.append(createCard(card, removeCard, showImage, toggleLike)));
+
+  })
+  .catch((err) => {
+    console.error('Error loading data:', err);
+  });
