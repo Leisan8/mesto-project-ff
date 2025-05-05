@@ -1,4 +1,4 @@
-import { deleteCardOnServer } from './api.js';
+import { deleteCardOnServer, addLikeOnServer, deleteLikeOnServer } from './api.js';
 
 const cardTemplate = document.querySelector('#card-template').content;
 
@@ -21,7 +21,9 @@ export function createCard(cardData, removeFunction, showImage, toggleLike, like
         card.querySelector('.card__delete-button').addEventListener('click', () => removeFunction(card, cardData._id));
     }
     showImage(cardImage, cardData);
-    card.querySelector('.card__like-button').addEventListener('click', toggleLike);
+    card.querySelector('.card__like-button').addEventListener('click', (evt) => {
+        toggleLike(evt, cardData._id);
+    });
 
     return card;
 }
@@ -33,7 +35,21 @@ export function removeCard(card, cardId) {
     card.remove();
 }
 
-export function toggleLike(evt) {
-    evt.target.classList.toggle('card__like-button_is-active');
+export function toggleLike(evt, cardId) {
+    const likeButton = evt.target;
+    const cardLikesContainer = likeButton.closest('.card__likes');
+    const likeCounter = cardLikesContainer.querySelector('.card__like-counter');
+
+    const isLiked = likeButton.classList.contains('card__like-button_is-active');
+    const action = isLiked ? deleteLikeOnServer : addLikeOnServer;
+
+    action(cardId)
+        .then(res => {
+        likeButton.classList.toggle('card__like-button_is-active');
+        likeCounter.textContent = res.likes.length;
+        })
+        .catch(err => {
+        console.error('Like action failed:', err);
+        });
 }
 

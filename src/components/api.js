@@ -73,3 +73,25 @@ export function updateProfileAvatarOnServer(avatarLink) {
       })
       .catch(err => console.log(err));
 }
+
+export function addLikeOnServer(cardId) {
+    return fetch(`https://nomoreparties.co/v1/wff-cohort-37/cards/likes/${cardId}`, {
+        method: 'PUT',
+        headers: {
+          authorization: AUTH_HEADER.authorization
+        }
+      })
+      .then(res => res.json())
+      .catch(err => console.log(err));
+}
+
+export function deleteLikeOnServer(cardId) {
+    return fetch(`https://nomoreparties.co/v1/wff-cohort-37/cards/likes/${cardId}`, {
+        method: 'DELETE',
+        headers: {
+          authorization: AUTH_HEADER.authorization
+        }
+      })
+      .then(res => res.json())
+      .catch(err => console.log(err));
+}
