@@ -73,7 +73,9 @@ closeButtons.forEach((closeButton) => {
         closePopup(openedPopup);
         
         const openedForm = openedPopup.querySelector('.popup__form');
-        clearValidation(openedForm, enableValidationConfig);
+        if (openedForm) {
+            clearValidation(openedForm, enableValidationConfig);
+        }
     });
 })
 
@@ -85,7 +87,9 @@ popups.forEach((popup) => {
 
             const openedPopup = evt.target.closest('.popup');
             const openedForm = openedPopup.querySelector('.popup__form');
-            clearValidation(openedForm, enableValidationConfig);
+            if (openedForm) {
+                clearValidation(openedForm, enableValidationConfig);
+            }
         }
     })
 })
@@ -96,6 +100,10 @@ function handleEditProfileFormSubmit(evt) {
     evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
                                                 // Так мы можем определить свою логику отправки.
                                                 // О том, как это делать, расскажем позже.
+    
+    const submitButton = evt.target.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.textContent;
+    submitButton.textContent = 'Сохранение...';
 
     // Получите значение полей jobInput и nameInput из свойства value
     const name = nameInput.value;
@@ -106,7 +114,7 @@ function handleEditProfileFormSubmit(evt) {
     profileJob.textContent = job;
 
     updateProfileDetialsOnServer(name, job);
-
+    submitButton.textContent = originalButtonText;
     closePopup(popupEdit);
 }
 
@@ -119,6 +127,10 @@ formEditProfile.addEventListener('submit', handleEditProfileFormSubmit);
 
 function handleImageCreationSubmit(evt) {
     evt.preventDefault(); 
+    const submitButton = evt.target.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.textContent;
+    submitButton.textContent = 'Сохранение...';
+
 
     const placeNameValue = inputNameFormProfile.value;
     const linkValue = inputLinkFormAddNewCard.value
@@ -135,6 +147,8 @@ function handleImageCreationSubmit(evt) {
 
     inputNameFormProfile.value = "";
     inputLinkFormAddNewCard.value = "";
+
+    submitButton.textContent = originalButtonText;
 
     closePopup(popupAdd);
 }
@@ -180,6 +194,9 @@ Promise.all([fetchUserData(), fetchCards()])
 
   submitAvatarButton.addEventListener('click', (evt) => {
     evt.preventDefault();
+    const submitButton = evt.target.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.textContent;
+    submitButton.textContent = 'Сохранение...';
 
     const NewAvatarLink = popupAvatar.querySelector('.popup__input_type_url').value
     
@@ -189,6 +206,7 @@ Promise.all([fetchUserData(), fetchCards()])
     const openedPopup = evt.target.closest('.popup');
     const openedForm = openedPopup.querySelector('.popup__form');
 
+    submitButton.textContent = originalButtonText;
     closePopup(popupAvatar);
     clearValidation(openedForm, enableValidationConfig);
   })
