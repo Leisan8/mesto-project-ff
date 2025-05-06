@@ -19,7 +19,7 @@ export function fetchCards() {
 
 
 export function updateProfileDetialsOnServer(name, job) {
-    fetch('https://nomoreparties.co/v1/wff-cohort-37/users/me', {
+    return fetch(`${API_URL}/users/me`, {
         method: 'PATCH',
         headers: {
           authorization: AUTH_HEADER.authorization,
@@ -30,12 +30,11 @@ export function updateProfileDetialsOnServer(name, job) {
           about: job
         })
       })
-      .catch(err => console.log(err));
 }
 
 
 export function addNewCardOnServer(name, link) {
-    fetch('https://nomoreparties.co/v1/wff-cohort-37/cards', {
+    return fetch(`${API_URL}/cards`, {
         method: 'POST',
         headers: {
           authorization: AUTH_HEADER.authorization,
@@ -46,22 +45,20 @@ export function addNewCardOnServer(name, link) {
           link: link
         })
       })
-      .catch(err => console.log(err));
 }
 
 
 export function deleteCardOnServer(cardId) {
-    fetch(`https://nomoreparties.co/v1/wff-cohort-37/cards/${cardId}`, {
+    return fetch(`${API_URL}/cards/${cardId}`, {
         method: 'DELETE',
         headers: {
           authorization: AUTH_HEADER.authorization
         }
       })
-      .catch(err => console.log(err));
 }
 
 export function updateProfileAvatarOnServer(avatarLink) {
-    fetch('https://nomoreparties.co/v1/wff-cohort-37/users/me/avatar ', {
+    return fetch(`${API_URL}/users/me/avatar`, {
         method: 'PATCH',
         headers: {
           authorization: AUTH_HEADER.authorization,
@@ -71,27 +68,22 @@ export function updateProfileAvatarOnServer(avatarLink) {
           avatar: avatarLink,
         })
       })
-      .catch(err => console.log(err));
 }
 
 export function addLikeOnServer(cardId) {
-    return fetch(`https://nomoreparties.co/v1/wff-cohort-37/cards/likes/${cardId}`, {
+    return fetch(`${API_URL}/cards/likes/${cardId}`, {
         method: 'PUT',
         headers: {
           authorization: AUTH_HEADER.authorization
         }
       })
-      .then(res => res.json())
-      .catch(err => console.log(err));
 }
 
 export function deleteLikeOnServer(cardId) {
-    return fetch(`https://nomoreparties.co/v1/wff-cohort-37/cards/likes/${cardId}`, {
+    return fetch(`${API_URL}/cards/likes/${cardId}`, {
         method: 'DELETE',
         headers: {
           authorization: AUTH_HEADER.authorization
         }
       })
-      .then(res => res.json())
-      .catch(err => console.log(err));
 }

@@ -31,8 +31,11 @@ export function createCard(cardData, removeFunction, showImage, toggleLike, like
 // @todo: Функция удаления карточки
 
 export function removeCard(card, cardId) {
-    deleteCardOnServer(cardId);
-    card.remove();
+    deleteCardOnServer(cardId)
+        .then(() => {
+            card.remove();
+        })
+        .catch(err => console.log(err));
 }
 
 export function toggleLike(evt, cardId) {
@@ -44,6 +47,7 @@ export function toggleLike(evt, cardId) {
     const action = isLiked ? deleteLikeOnServer : addLikeOnServer;
 
     action(cardId)
+        .then(res => res.json())
         .then(res => {
         likeButton.classList.toggle('card__like-button_is-active');
         likeCounter.textContent = res.likes.length;
