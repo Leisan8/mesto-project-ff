@@ -3,17 +3,24 @@ const AUTH_HEADER = {
   authorization: 'bb1d456e-eba6-4c51-b0d8-becd4ada6370'
 };
 
+function getResponseData(res) {
+  if (!res.ok) {
+      return Promise.reject(`Ошибка: ${res.status}`); 
+  }
+  return res.json();
+} 
+
 
 export function fetchUserData() {
     return fetch(`${API_URL}/users/me`, {
       headers: AUTH_HEADER
-    }).then(res => res.json());
+    }).then(getResponseData);
   }
   
 export function fetchCards() {
     return fetch(`${API_URL}/cards`, {
       headers: AUTH_HEADER
-    }).then(res => res.json());
+    }).then(getResponseData);
   }
 
 
@@ -29,7 +36,7 @@ export function updateProfileDetialsOnServer(name, job) {
           name: name,
           about: job
         })
-      })
+      }).then(getResponseData)
 }
 
 
@@ -44,7 +51,7 @@ export function addNewCardOnServer(name, link) {
           name: name,
           link: link
         })
-      })
+      }).then(getResponseData)
 }
 
 
@@ -54,7 +61,7 @@ export function deleteCardOnServer(cardId) {
         headers: {
           authorization: AUTH_HEADER.authorization
         }
-      })
+      }).then(getResponseData)
 }
 
 export function updateProfileAvatarOnServer(avatarLink) {
@@ -67,7 +74,7 @@ export function updateProfileAvatarOnServer(avatarLink) {
         body: JSON.stringify({
           avatar: avatarLink,
         })
-      })
+      }).then(getResponseData)
 }
 
 export function addLikeOnServer(cardId) {
@@ -76,7 +83,7 @@ export function addLikeOnServer(cardId) {
         headers: {
           authorization: AUTH_HEADER.authorization
         }
-      })
+      }).then(getResponseData)
 }
 
 export function deleteLikeOnServer(cardId) {
@@ -85,5 +92,5 @@ export function deleteLikeOnServer(cardId) {
         headers: {
           authorization: AUTH_HEADER.authorization
         }
-      })
+      }).then(getResponseData)
 }

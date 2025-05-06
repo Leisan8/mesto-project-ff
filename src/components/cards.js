@@ -22,7 +22,7 @@ export function createCard(cardData, removeFunction, showImage, toggleLike, like
     }
     showImage(cardImage, cardData);
     card.querySelector('.card__like-button').addEventListener('click', (evt) => {
-        toggleLike(evt, cardData._id);
+        toggleLike(evt, cardData._id, card.querySelector('.card__like-button'), cardLikeCounter);
     });
 
     return card;
@@ -38,16 +38,12 @@ export function removeCard(card, cardId) {
         .catch(err => console.log(err));
 }
 
-export function toggleLike(evt, cardId) {
-    const likeButton = evt.target;
-    const cardLikesContainer = likeButton.closest('.card__likes');
-    const likeCounter = cardLikesContainer.querySelector('.card__like-counter');
+export function toggleLike(evt, cardId, likeButton, likeCounter) {
 
     const isLiked = likeButton.classList.contains('card__like-button_is-active');
     const action = isLiked ? deleteLikeOnServer : addLikeOnServer;
 
     action(cardId)
-        .then(res => res.json())
         .then(res => {
         likeButton.classList.toggle('card__like-button_is-active');
         likeCounter.textContent = res.likes.length;
