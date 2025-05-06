@@ -2,10 +2,15 @@ import { deleteCardOnServer, addLikeOnServer, deleteLikeOnServer } from './api.j
 
 const cardTemplate = document.querySelector('#card-template').content;
 
-export function createCard(cardData, removeFunction, showImage, toggleLike, likesCount=0) {
+export function createCard(cardData, removeFunction, showImage, toggleLike, likesCount=0, userId=null) {
     const card = cardTemplate.querySelector('.places__item').cloneNode(true);
     const cardImage = card.querySelector('.card__image')
     const cardLikeCounter = card.querySelector('.card__like-counter');
+    const likeButton = card.querySelector('.card__like-button');
+
+    if (cardData.likes.some((like) => {return like._id == userId})) {
+        likeButton.classList.add('card__like-button_is-active');
+    }
 
     cardImage.src = cardData.link;
     cardImage.alt = cardData.name;
@@ -22,7 +27,7 @@ export function createCard(cardData, removeFunction, showImage, toggleLike, like
     }
     showImage(cardImage, cardData);
     card.querySelector('.card__like-button').addEventListener('click', (evt) => {
-        toggleLike(evt, cardData._id, card.querySelector('.card__like-button'), cardLikeCounter);
+        toggleLike(evt, cardData._id, likeButton, cardLikeCounter);
     });
 
     return card;

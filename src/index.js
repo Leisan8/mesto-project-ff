@@ -188,7 +188,7 @@ Promise.all([fetchUserData(), fetchCards()])
     profileDescription.textContent = userData.about;
     profileImage.style.backgroundImage = `url('${userData.avatar}')`;
 
-    cards.forEach(card => cardsList.append(createCard(card, card.owner._id === userId ? removeCard : null, showImage, toggleLike, card.likes.length)));
+    cards.forEach(card => cardsList.append(createCard(card, card.owner._id === userId ? removeCard : null, showImage, toggleLike, card.likes.length, userId)));
 
   })
   .catch((err) => {
