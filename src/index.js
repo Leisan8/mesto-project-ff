@@ -64,7 +64,11 @@ editButton.addEventListener('click', () => {
 });
 
 
-addButton.addEventListener('click', () => openPopup(popupAdd));
+addButton.addEventListener('click', () => {
+    const openedForm = popupAdd.querySelector('.popup__form');
+    clearValidation(openedForm, enableValidationConfig);
+    openPopup(popupAdd)
+});
 
 
 closeButtons.forEach((closeButton) => {
@@ -110,11 +114,11 @@ function handleEditProfileFormSubmit(evt) {
     const job = jobInput.value
 
     updateProfileDetialsOnServer(name, job)
-        .then(() => {
+        .then((res) => {
             closePopup(popupEdit);
             // Вставьте новые значения с помощью textContent
-            profileName.textContent = name;
-            profileJob.textContent = job;
+            profileName.textContent = res.name;
+            profileJob.textContent = res.about;
 
         })
         .catch(err => console.log(err))
@@ -136,18 +140,13 @@ function handleImageCreationSubmit(evt) {
     const originalButtonText = submitButton.textContent;
     submitButton.textContent = 'Сохранение...';
 
-
     const placeNameValue = inputNameFormProfile.value;
     const linkValue = inputLinkFormAddNewCard.value
 
-    const newCardData = {
-        name: placeNameValue,
-        link: linkValue
-    }
-
     addNewCardOnServer(placeNameValue, linkValue)
-        .then(() =>{
-            const newCard = createCard(newCardData, removeCard, showImage, toggleLike);
+        .then((res) =>{
+            const cardData = {name: res.name, link: res.link, likes: res.likes, _id: res._id};
+            const newCard = createCard(cardData, removeCard, showImage, toggleLike);
             cardsList.prepend(newCard);
             inputNameFormProfile.value = "";
             inputLinkFormAddNewCard.value = "";
@@ -197,6 +196,8 @@ Promise.all([fetchUserData(), fetchCards()])
 
 
   profileAvatar.addEventListener('click', (evt) => {
+    const openedForm = popupAvatar.querySelector('.popup__form');
+    clearValidation(openedForm, enableValidationConfig);
     openPopup(popupAvatar);
   })
 
@@ -208,11 +209,11 @@ Promise.all([fetchUserData(), fetchCards()])
 
     const openedPopup = evt.target.closest('.popup');
     const openedForm = openedPopup.querySelector('.popup__form');
-    const NewAvatarLink = popupAvatar.querySelector('.popup__input_type_url').value
+    const newAvatarLink = popupAvatar.querySelector('.popup__input_type_url').value
 
-    updateProfileAvatarOnServer(NewAvatarLink)
-        .then(() => {
-            profileImage.style.backgroundImage = `url('${NewAvatarLink}')`;
+    updateProfileAvatarOnServer(newAvatarLink)
+        .then((res) => {
+            profileImage.style.backgroundImage = `url('${res.avatar}')`;
 
             closePopup(popupAvatar);
             clearValidation(openedForm, enableValidationConfig);

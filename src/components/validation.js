@@ -49,6 +49,7 @@ export  function clearValidation(form, validationConfig) {
     allInputs.forEach((input) => {
         hideInputError(form.querySelector(`.${input.id}-error`), input, validationConfig.inputErrorClass, validationConfig.errorClass);
     })
+    toggleButtonState(allInputs, form.querySelector(validationConfig.submitButtonSelector), validationConfig.inactiveButtonClass);
   }
 
 
